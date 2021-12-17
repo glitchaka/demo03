@@ -10,6 +10,7 @@ function love.load( ... )
     player.y =300
     player.w = 30
     player.h = 30
+    player.direction = "down"
 
     coins = {}
     score = 0
@@ -25,7 +26,12 @@ function love.load( ... )
     images = {}
     images.background = love.graphics.newImage("assets/images/background.png")
     images.coin = love.graphics.newImage("assets/images/coin.png")
-    images.player = love.graphics.newImage("assets/images/player.png")
+
+    --image player directional
+    images.player_down = love.graphics.newImage("assets/images/player_down.png")
+    images.player_up = love.graphics.newImage("assets/images/player_up.png")
+    images.player_right = love.graphics.newImage("assets/images/player_right.png")
+    images.player_left = love.graphics.newImage("assets/images/player_left.png")
 end
 
 --[[esta funcion se actualiza en cada frame, por lo que es ideal para realizar
@@ -33,17 +39,21 @@ end
 ]]
 
 function love.update(dt)
-    if love.keyboard.isDown("d") then
+    if love.keyboard.isDown("d") then --right direction
         player.x = player.x + (200 * dt)
+        player.direction = "right"
     end
-    if love.keyboard.isDown("a") then
+    if love.keyboard.isDown("a") then --left direction
         player.x = player.x - (200 * dt)
+        player.direction = "left"
     end
-    if love.keyboard.isDown("w") then
+    if love.keyboard.isDown("w") then --down direction
         player.y = player.y - (200 * dt)
+        player.direction = "up"
     end
-    if love.keyboard.isDown("s") then
+    if love.keyboard.isDown("s") then --up direction
         player.y = player.y + (200 * dt)
+        player.direction = "down"
     end
 
     for i=#coins, 1, -1 do 
@@ -78,7 +88,18 @@ function love.draw()
 
     love.graphics.draw(images.background, 0, 0)
 
-    love.graphics.draw(images.player,player.x,player.y) 
+    local img = images.player_down
+    if player.direction == "right" then
+        img = images.player_right
+    elseif player.direction == "left" then
+        img = images.player_left
+    elseif player.direction == "up" then
+        img = images.player_up
+    elseif player.direction == "down" then
+        img = images.player_down
+    end
+
+    love.graphics.draw(img,player.x,player.y) 
     for i=1, #coins, 1 do 
         local coin = coins[i]
         love.graphics.draw(images.coin,coin.x,coin.y)   
